@@ -8,8 +8,6 @@ def warning_screen(message):
     messagebox.showerror("Error", message)
 
 
-
-
 class Input:
     def __init__(self, size):
         self.limit = int(600 / size) - 3
@@ -67,10 +65,11 @@ class Input:
                 warning_screen(limit_msg)
             elif self.x1 == self.x2 and self.y1 == self.y2:
                 warning_screen("START AND TARGET CAN NOT BE THE SAME")
-        except SyntaxError:
+            else:
+                self.root.quit()
+                self.root.destroy()
+        except:
             warning_screen("Please enter an integer")
-        else:
-            self.root.destroy()
 
     def Button(self):
         button = Button(self.root, text="Submit", command=self.get_values)
@@ -82,4 +81,3 @@ class Input:
         self.Button()
         self.Texts()
         self.root.mainloop()
-
