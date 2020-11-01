@@ -1,16 +1,22 @@
 from tkinter import *
+from tkinter import messagebox
 
-size = 15
-limit = int(600 / size) - 3  # Will be called in input
+
+def warning_screen(message):
+    window = Tk()
+    window.withdraw()
+    messagebox.showerror("Error", message)
+
+
 
 
 class Input:
-    def __init__(self):
-
+    def __init__(self, size):
+        self.limit = int(600 / size) - 3
         self.root = Tk()
-        self.root.title("Settings")
-        self.root.configure(background='light blue')
-        self.width_of_text = 50
+        self.root.title("Set Coordinates")
+        self.root.configure(background='black')
+        self.width_of_text = 40
         self.width_of_text_2 = 4
         # ENTRIES
         self.x1_input = Entry(self.root, width=self.width_of_text)
@@ -18,7 +24,7 @@ class Input:
         self.x2_input = Entry(self.root, width=self.width_of_text)
         self.y2_input = Entry(self.root, width=self.width_of_text)
         # TEXTS
-        self.text = Text(self.root, height=4, width=40)
+        self.text = Text(self.root, height=4, width=30)
         self.text_1 = Text(self.root, height=1, width=self.width_of_text_2)
         self.text_2 = Text(self.root, height=1, width=self.width_of_text_2)
         self.text_3 = Text(self.root, height=1, width=self.width_of_text_2)
@@ -36,8 +42,8 @@ class Input:
         self.y2_input.grid(row=4, column=1)
 
     def Texts(self):
-        self.text.insert(INSERT, "Please enter the coordinates \nof the starting pixel and the goal pixelbellow and "
-                                 "press Next")
+        self.text.insert(INSERT, "Enter the coordinates \nof the starting pixel and the goal pixel bellow and "
+                                 "press \nNext")
         self.text.grid(row=0, column=1)
         self.text_1.insert(INSERT, "X1")
         self.text_1.grid(row=1, column=0)
@@ -55,19 +61,20 @@ class Input:
             self.x2 = int(self.x2_input.get())
             self.y2 = int(self.y2_input.get())
             if self.x1 < 0 or self.x2 < 0 or self.y1 < 0 or self.y2 < 0:
-                print(" COORDINATES MUST BE AT LEAST 0")
-            elif self.x1 > limit or self.x2 > limit or self.y1 > limit or self.y2 > limit:
-                print(" COORDINATES'S LIMIT IS ", str(limit))
+                warning_screen(" COORDINATES MUST BE AT LEAST 0")
+            elif self.x1 > self.limit or self.x2 > self.limit or self.y1 > self.limit or self.y2 > self.limit:
+                limit_msg = "COORDINATES'S LIMIT IS " + str(self.limit)
+                warning_screen(limit_msg)
             elif self.x1 == self.x2 and self.y1 == self.y2:
-                print("START AND TARGET CAN NOT BE THE SAME")
-            else:
-                self.root.destroy()
-        except:
-            print("Please enter an integer")
+                warning_screen("START AND TARGET CAN NOT BE THE SAME")
+        except SyntaxError:
+            warning_screen("Please enter an integer")
+        else:
+            self.root.destroy()
 
     def Button(self):
-        # command take a function without ()
         button = Button(self.root, text="Submit", command=self.get_values)
+        Button(self.root, text="Quit", command=self.root.destroy)
         button.grid(row=5, column=1)
 
     def run(self):
@@ -75,3 +82,4 @@ class Input:
         self.Button()
         self.Texts()
         self.root.mainloop()
+

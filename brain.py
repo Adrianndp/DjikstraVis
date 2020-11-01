@@ -1,30 +1,38 @@
 import pygame
 import math
+from tkinter import *
+from tkinter import messagebox
+
+
+def warning_screen(message):
+    window = Tk()
+    window.withdraw()
+    messagebox.showerror("Error", message)
+
+
+def path_reached():
+    window = Tk()
+    window.withdraw()
+    messagebox.showinfo(" Info ", "Path successfully founded.")
 
 
 class Settings:
-    def __init__(self):
-        # SETTINGS
-        self.start = ()
-        self.target = ()
-        self.size = 15  # Size of pixel (if you want to change it make sure to change it in input file too)
-        self.visited = []
+    def __init__(self, size):
+        self.start, self.target = (), ()
+        self.size = size
+        self.x1, self.y1, self.x2, self.y2 = 0, 0, 0, 0
         (self.width, self.height) = (600, 600)
         self.BLACK = (0, 0, 0)
-        self.GREY = (220, 220, 220)
         self.WHITE = (255, 255, 255)
         self.limit = int(self.width / self.size)
         self.thickness = 2
-        self.positions = {}  # The whole positions and weights of the map
+        self.positions = {}
         self.positions_list = []  # the positions trimmed without the border and walls
-        self.weight = []  # i used the function of distance to append the weight of each node
-        self.paths_list = []
-        self.draw = True
-        # settings from pygame
+        self.weight, self.visited, self.paths_list = [], [], []
+        self.draw, self.running = True, True
         pygame.init()
         self.screen = pygame.display.set_mode((self.width, self.height))
         pygame.display.set_caption('shortest path finder   DRAW WALLS WITH THE MOUSE THEN PRESS SPACE KEY')
-        self.running = True
         points = [i * self.size for i in range(self.limit)]
         for x in points:
             for y in points:
@@ -43,12 +51,12 @@ class Settings:
         pygame.draw.rect(self.screen, self.WHITE, [0, 0, self.size, self.size], 0)
         for key in self.positions.keys():
             if key[0] == 0 or key[1] == 0 or key[0] == 600 - self.size or key[1] == 600 - self.size:
-                self.positions[key] = (self.GREY, 0)
+                self.positions[key] = (self.BLACK, 0)
 
     def run(self, x1, y1, x2, y2):
+        self.x1, self.y1, self.x2, self.y2 = x1, y1, x2, y2
         self.start = ((x1 + 1)*self.size, (y1 + 1)*self.size)
         self.target = ((x2 + 1)*self.size, (y2 + 1)*self.size)
-        print()
         self.set_pixel(self.start[0], self.start[1], 255, 80, 80)
         self.set_pixel(self.target[0], self.target[1], 220, 170, 100 )
         while self.running:
@@ -61,7 +69,6 @@ class Settings:
                     if event.key == pygame.K_SPACE:
                         self.draw = False
                         self.search_shortest_path()
-                        # print(self.positions)
             if pygame.mouse.get_pressed()[0]:
                 if self.draw:
                     x_pos = math.floor(x_pos / self.size)
@@ -131,7 +138,7 @@ class Settings:
             for path in self.paths_list:
                 min_weight_list.append(path[-1])
             if len(min_weight_list) == 0:
-                print("ITS NOT POSSIBLE")
+                warning_screen("The given path is unreachable")
                 return
             min_weight = min(min_weight_list)
             next_curr = self.paths_list[min_weight_list.index(min_weight)]
@@ -156,12 +163,12 @@ class Settings:
                     new_list[-1] = min_weight + 1
                     self.paths_list.append(new_list.copy())
                     new_list.pop(-2)
-
             self.paths_list.remove(next_curr)
 
     def search_shortest_path(self):
         self.path_list()
         if len(self.paths_list) == 0:
-            print("ITS NOT POSSIBLE")
+            warning_screen("The given path is unreachable")
             return
         self.shortest_path()
+        path_reached()
