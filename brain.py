@@ -16,7 +16,12 @@ def path_reached():
     messagebox.showinfo(" Info ", "Path successfully founded.")
 
 
-class Settings:
+def distance(x1, y1, x2, y2):
+    result = math.sqrt(math.pow((x1 - x2), 2) + math.pow((y1 - y2), 2))
+    return result
+
+
+class Dijkstra:
     def __init__(self, size):
         self.start, self.target = (), ()
         self.size = size
@@ -32,7 +37,7 @@ class Settings:
         self.draw, self.running = True, True
         pygame.init()
         self.screen = pygame.display.set_mode((self.width, self.height))
-        pygame.display.set_caption('shortest path finder   DRAW WALLS WITH THE MOUSE THEN PRESS SPACE KEY')
+        pygame.display.set_caption('Shortest Path Finder')
         points = [i * self.size for i in range(self.limit)]
         for x in points:
             for y in points:
@@ -103,17 +108,13 @@ class Settings:
             neighbor.append((x - self.size, y + self.size))
         return neighbor
 
-    def distance(self, x1, y1, x2, y2):
-        result = math.sqrt(math.pow((x1 - x2), 2) + math.pow((y1 - y2), 2))
-        return result
-
     def path_list(self):
         # REMOVING EVERYTHING WHICH IS NOT A POTENTIAL PATH OR NODES
         for key, value in self.positions.items():
             if key[0] != 0 and key[1] != 0 and key[0] != 600 - self.size and key[1] != 600 - self.size:
                 self.positions_list.append(key)
                 if value[1] != 0:
-                    self.weight.append(self.distance(key[0], key[1], self.target[0], self.target[1]))
+                    self.weight.append(distance(key[0], key[1], self.target[0], self.target[1]))
                 else:
                     self.visited.append(key)  # walls also in visited so he wont consider to take it
                     self.positions_list.pop()

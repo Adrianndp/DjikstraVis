@@ -59,12 +59,12 @@ class Input:
             self.x2 = int(self.x2_input.get())
             self.y2 = int(self.y2_input.get())
             if self.x1 < 0 or self.x2 < 0 or self.y1 < 0 or self.y2 < 0:
-                warning_screen(" COORDINATES MUST BE AT LEAST 0")
+                warning_screen("Coordinates can not be negative")
             elif self.x1 > self.limit or self.x2 > self.limit or self.y1 > self.limit or self.y2 > self.limit:
-                limit_msg = "COORDINATES'S LIMIT IS " + str(self.limit)
+                limit_msg = "Coordinate's limit is " + str(self.limit)
                 warning_screen(limit_msg)
             elif self.x1 == self.x2 and self.y1 == self.y2:
-                warning_screen("START AND TARGET CAN NOT BE THE SAME")
+                warning_screen("Start can not be equal to target")
             else:
                 self.root.quit()
                 self.root.destroy()
@@ -72,7 +72,7 @@ class Input:
             warning_screen("Please enter an integer")
 
     def Button(self):
-        button = Button(self.root, text="Submit", command=self.get_values)
+        button = Button(self.root, text="SUBMIT", command=self.get_values)
         Button(self.root, text="Quit", command=self.root.destroy)
         button.grid(row=5, column=1)
 
