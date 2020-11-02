@@ -73,7 +73,7 @@ class Input:
 
     def Button(self):
         button = Button(self.root, text="SUBMIT", command=self.get_values)
-        Button(self.root, text="Quit", command=self.root.destroy)
+        Button(self.root, text="Quit", command=self.root.quit())
         button.grid(row=5, column=1)
 
     def run(self):
